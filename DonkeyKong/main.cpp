@@ -42,21 +42,14 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && (marioSprite.getPosition().x >= marioSprite.getTexture()->getSize().x * marioSprite.getScale().x / 5)){
 			velMarioX = -5;
 		}
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && (marioSprite.getPosition().x <= 800 - marioSprite.getTexture()->getSize().x * marioSprite.getScale().x / 4.1)){
 			velMarioX = 5;
 		}
 
 		marioSprite.setPosition(marioSprite.getPosition().x + velMarioX, marioSprite.getPosition().y + velMarioY);
-
-		if((marioSprite.getPosition().x >= 800) || (marioSprite.getPosition().x < 0)){
-			velMarioX = 0;
-		}
-		if((marioSprite.getPosition().y >= 600) || (marioSprite.getPosition().y < 0)){
-			velMarioY = 0;
-		}
 
 		window.clear(sf::Color::Black);
 		window.draw(marioSprite);
