@@ -10,43 +10,132 @@
 #include <SFML/audio.hpp>
 #include <ctime>
 
+void createPlatforms(sf::RectangleShape *plataforma){
+	int contadorChaoPosition = 0;
+	int contadorChaoCriados = 0;
+	int floorRotation = 0;
+
+	for(int i = 0; i < 27; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(0 + contadorChaoPosition,570);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+	}
+
+	contadorChaoPosition = 0;
+
+	for(int i = contadorChaoCriados + 1; i < 50; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(50 + contadorChaoPosition, 480 + floorRotation);
+		plataforma[i].setRotation(2.f);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+		floorRotation++;
+	}
+
+	contadorChaoPosition = 0;
+	floorRotation = 0;
+
+	for(int i = contadorChaoCriados + 1; i < 72; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(80 + contadorChaoPosition, 420 - floorRotation);
+		plataforma[i].setRotation(-1.f);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+		floorRotation++;
+	}
+
+	contadorChaoPosition = 0;
+	floorRotation = 0;
+
+	for(int i = contadorChaoCriados + 1; i < 94; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(50 + contadorChaoPosition, 320 + floorRotation);
+		plataforma[i].setRotation(1.f);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+		floorRotation++;
+	}
+
+	contadorChaoPosition = 0;
+	floorRotation = 0;
+
+	for(int i = contadorChaoCriados + 1; i < 116; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(80 + contadorChaoPosition, 260 - floorRotation);
+		plataforma[i].setRotation(-1.f);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+		floorRotation++;
+	}
+
+	contadorChaoPosition = 0;
+	floorRotation = 0;
+
+	for(int i = contadorChaoCriados + 1; i < 126; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(680 - contadorChaoPosition, 185 - floorRotation);
+		plataforma[i].setRotation(0.5f);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+		floorRotation++;
+	}
+
+	for(int i = contadorChaoCriados + 1; i < 139; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(680 - contadorChaoPosition, 185 - floorRotation);
+
+		contadorChaoPosition += 30;
+		contadorChaoCriados++;
+	}
+
+	contadorChaoPosition = 0;
+	floorRotation = 0;
+
+	for(int i = contadorChaoCriados; i < 142; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(285 + contadorChaoPosition, 100);
+
+		contadorChaoPosition += 30;
+	}
+
+	contadorChaoPosition = 0;
+
+	for(int i = 142; i < 144; i++){
+		plataforma[i].setSize(sf::Vector2f(30,15));
+		plataforma[i].setPosition(255 - contadorChaoPosition, 115);
+		contadorChaoPosition += 30;
+	}
+
+	contadorChaoPosition = 0;
+}
+
 int main(int argc, char **argv) {
 	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong");
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
-	sf::RectangleShape plataforma[7];
-	plataforma[0].setSize(sf::Vector2f(680, 15));
-	plataforma[0].setFillColor(sf::Color::Red);
-	plataforma[0].setPosition(50,570);
+	int NumPlataforma=0;
 
-	plataforma[1].setSize(sf::Vector2f(630, 15));
-	plataforma[1].setFillColor(sf::Color::Cyan);
-	plataforma[1].setPosition(50,470);
-	plataforma[1].setRotation(2.f);
+	sf::RectangleShape plataforma[144];
 
-	plataforma[2].setSize(sf::Vector2f(630, 15));
-	plataforma[2].setFillColor(sf::Color::Cyan);
-	plataforma[2].setPosition(720,390);
-	plataforma[2].setRotation(178.f);
+	createPlatforms(plataforma);
 
-	plataforma[3].setSize(sf::Vector2f(630, 15));
-	plataforma[3].setFillColor(sf::Color::Cyan);
-	plataforma[3].setPosition(50,290);
-	plataforma[3].setRotation(2.f);
+	sf::Texture platformTexture;
 
-	plataforma[4].setSize(sf::Vector2f(630, 15));
-	plataforma[4].setFillColor(sf::Color::Cyan);
-	plataforma[4].setPosition(720,210);
-	plataforma[4].setRotation(178.f);
+	if(!platformTexture.loadFromFile("assets/floorTexture.png")){
+		return -1;
+	}
 
-	plataforma[5].setSize(sf::Vector2f(620, 15));
-	plataforma[5].setFillColor(sf::Color::Red);
-	plataforma[5].setPosition(50,130);
-
-	plataforma[6].setSize(sf::Vector2f(90, 15));
-	plataforma[6].setFillColor(sf::Color::White);
-	plataforma[6].setPosition(180,60);
+	for(int i = 0; i < 144; i++){
+		plataforma[i].setTexture(&platformTexture);
+	}
 
 	sf::Texture marioTexture;
 	sf::Sprite marioSprite;
@@ -54,10 +143,14 @@ int main(int argc, char **argv) {
 	int velMarioX = 0, velMarioY = 0;
 
 	sf::Image icon = sf::Image { };
-	icon.loadFromFile("assets/iconPage.png");
+	if(!icon.loadFromFile("assets/iconPage.png")){
+		return -1;
+	}
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-	marioTexture.loadFromFile("assets/mario.png");
+	if(!marioTexture.loadFromFile("assets/mario.png")){
+		return -1;
+	}
 	marioSprite.setTexture(marioTexture);
 
 	marioSprite.setOrigin(marioSprite.getLocalBounds().width/2., marioSprite.getLocalBounds().height/2.);
@@ -87,11 +180,15 @@ int main(int argc, char **argv) {
 		window.clear(sf::Color::Black);
 		window.draw(marioSprite);
 		window.draw(marioSprite);
-		int NumPlataforma=0;
-		while(NumPlataforma<7){
+		/*while(NumPlataforma<8){
 			window.draw(plataforma[NumPlataforma]);
 			NumPlataforma++;
+		};*/
+
+		for(NumPlataforma = 0; NumPlataforma<144;NumPlataforma++){
+			window.draw(plataforma[NumPlataforma]);
 		};
+
 		window.display();
 		sf::sleep(sf::milliseconds(10.0f));
 	}
