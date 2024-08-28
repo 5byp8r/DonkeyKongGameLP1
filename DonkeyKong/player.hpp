@@ -9,7 +9,6 @@
 #define SOURCE_PLAYER_HPP_
 
 #include <SFML/Graphics.hpp>
-
 #include <iostream>
 
 using namespace std;
@@ -20,7 +19,7 @@ private:
 	sf::Sprite playerSprite;
 	int velX = 0, velY = 0;
 public:
-	bool isPlayerCreated;
+	bool isPlayerCreated = true;
 
 	Player(){
 		if(!texturePlayer.loadFromFile("assets/mario.png")){

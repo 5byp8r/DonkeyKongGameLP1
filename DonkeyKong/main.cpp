@@ -150,6 +150,12 @@ int main(int argc, char **argv) {
 
 	Player player;
 
+	if(!player.isPlayerCreated){
+		cout << "Player não criado" << endl;
+
+		return -1;
+	}
+
 	while(window.isOpen()){
 		sf::Event event;
 
