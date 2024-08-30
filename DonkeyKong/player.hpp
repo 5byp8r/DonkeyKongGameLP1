@@ -19,12 +19,12 @@ class Player{
 private:
 	sf::Texture texturePlayer;
 	sf::Sprite playerSprite;
-	int velX = 0, velY = 0;
+	float velX = 0, velY = 0;
 	float positionX;
 	float positionY;
 public:
 	bool isPlayerCreated = true;
-	bool isColliding = true;
+	bool isColliding = false;
 	bool canMove = true;
 
 	Player(){
@@ -34,7 +34,7 @@ public:
 		playerSprite.setTexture(texturePlayer);
 
 		playerSprite.setOrigin(playerSprite.getLocalBounds().width/2., playerSprite.getLocalBounds().height/2.);
-		playerSprite.setPosition(130,551);
+		playerSprite.setPosition(130,0);
 		playerSprite.setScale(0.065, 0.065);
 		this->positionX = 130;
 		this->positionY = 551;
@@ -101,20 +101,42 @@ public:
 		bool collision;
 
 		if(platform.getPositionX() > 400){
-			if((getPositionX() - 14.3975 >= (platform.getPositionX())) && (getPositionX() - 14.3975 <= (platform.getPositionX() + platform.getSize().x))){
+			if((getPositionX() - 12.3975 >= (platform.getPositionX())) && (getPositionX() - 12.3975 <= (platform.getPositionX() + platform.getSize().x))){
 				if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
 					collision = true;
+					playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
 				}
 			}else{
 				collision = false;
 			}
-		}else if(platform.getPositionX() < 400){
-			if((getPositionX() + 14.3975 >= (platform.getPositionX())) && (getPositionX() <= (platform.getPositionX() + platform.getSize().x))){
+		}else if(platform.getPositionX() < 400 && playerSprite.getScale().x > 0){
+			if((getPositionX() + 13.3975 >= (platform.getPositionX())) && (getPositionX() - 12.3975 <= (platform.getPositionX() + platform.getSize().x))){
 				if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
 					collision = true;
+					playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
 				}
 			}else{
 				collision = false;
+			}
+		}else if(platform.getPositionX() < 400 && playerSprite.getScale().x < 0){
+			if(platform.getPositionY() > 500){
+				if((getPositionX() + 12.3975 >= (platform.getPositionX())) && (getPositionX() + 12.3975 <= (platform.getPositionX() + platform.getSize().x))){
+					if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
+						collision = true;
+						playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+					}
+				}else{
+					collision = false;
+				}
+			}else if(platform.getPositionY() < 500){
+				if((getPositionX() - 14.3975 >= (platform.getPositionX())) && (getPositionX() - 14.3975 <= (platform.getPositionX() + platform.getSize().x))){
+					if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
+						//playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+						collision = true;
+					}
+				}else{
+					collision = false;
+				}
 			}
 		}
 

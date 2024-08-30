@@ -12,7 +12,7 @@
 #include "player.hpp"
 #include "platforms.hpp"
 
-vector<Platforms> createPlatforms(){
+vector<Platforms> createPlatforms(	){
 	int contadorChaoPosition = 0;
 	int floorRotation = 0;
 	int positionX = 0;
@@ -33,40 +33,40 @@ vector<Platforms> createPlatforms(){
 				positionX = 61 + contadorChaoPosition;
 				positionY = 480 + floorRotation;
 				rotation = 2.f;
-				floorRotation++;
+				//floorRotation++;
 			}
 			else {
 				if(i == 47){
 					contadorChaoPosition = 0;
-					floorRotation = 0;
+					//floorRotation = 0;
 				}
 				if(i < 69){
 					positionX = 91 + contadorChaoPosition;
 					positionY = 420 - floorRotation;
 					rotation = -1.f;
-					floorRotation++;
+					//floorRotation++;
 				}
 				else {
 					if(i == 69){
 						contadorChaoPosition = 0;
-						floorRotation = 0;
+						//floorRotation = 0;
 					}
 					if(i < 91){
 						positionX = 61 + contadorChaoPosition;
 						positionY = 320 + floorRotation;
 						rotation = 1.f;
-						floorRotation++;
+						//floorRotation++;
 					}
 					else {
 						if(i == 91){
 							contadorChaoPosition = 0;
-							floorRotation = 0;
+							//floorRotation = 0;
 						}
 						if(i < 113){
 						positionX = 91 + contadorChaoPosition;
 						positionY = 260 - floorRotation;
 						rotation = -1.f;
-						floorRotation++;
+						//floorRotation++;
 						}
 						else {
 							if(i == 113){
@@ -75,20 +75,20 @@ vector<Platforms> createPlatforms(){
 							}
 							if(i < 123){
 							positionX = 691 - contadorChaoPosition;
-							positionY = 185 - floorRotation;
+							positionY = 175 - floorRotation;
 							rotation = 0.5f;
-							floorRotation++;
+							//floorRotation++;
 							}
 							else {
 								if(i < 135){
 								positionX = 691 - contadorChaoPosition;
-								positionY = 185 - floorRotation;
+								positionY = 175 - floorRotation;
 								rotation = 0.f;
 								}
 								else {
 									if(i == 135){
 										contadorChaoPosition = 0;
-										floorRotation = 0;
+										//floorRotation = 0;
 									}
 									if(i < 139){
 									positionX = 296 + contadorChaoPosition;
@@ -123,7 +123,8 @@ vector<Platforms> createPlatforms(){
 	return plataformas;
 }
 
-int main(int argc, char **argv) {
+
+int main(int argc, char **argv){
 	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong",sf::Style::Close | sf::Style::Titlebar);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);

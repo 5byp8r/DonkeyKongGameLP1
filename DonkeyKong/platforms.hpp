@@ -24,7 +24,7 @@ public:
 	Platforms(sf::Vector2f size, int positionX, int positionY, float rotation){
 		platform.setSize(size);
 		platform.setPosition(positionX,positionY);
-		platform.setRotation(rotation);
+		//platform.setRotation(rotation);
 		this->size = size;
 	}
 
