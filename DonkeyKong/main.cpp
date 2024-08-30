@@ -6,27 +6,31 @@
  */
 
 #include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/audio.hpp>
 #include "player.hpp"
+#include "platforms.hpp"
 
-void createPlatforms(sf::RectangleShape *plataforma){
+vector<Platforms> createPlatforms(){
 	int contadorChaoPosition = 0;
 	int floorRotation = 0;
 	int positionX = 0;
 	int positionY = 570;
 	float rotation = 0.f;
 
+	vector<Platforms> plataformas;
+
 	for(int i = 0; i < 141; i++){
 		if(i < 24){
-			positionX = 30 + contadorChaoPosition;
+			positionX = 41 + contadorChaoPosition;
 		}
 		else {
 			if(i == 24){
 				contadorChaoPosition = 0;
 			}
 			if(i < 47){
-				positionX = 50 + contadorChaoPosition;
+				positionX = 61 + contadorChaoPosition;
 				positionY = 480 + floorRotation;
 				rotation = 2.f;
 				floorRotation++;
@@ -37,7 +41,7 @@ void createPlatforms(sf::RectangleShape *plataforma){
 					floorRotation = 0;
 				}
 				if(i < 69){
-					positionX = 80 + contadorChaoPosition;
+					positionX = 91 + contadorChaoPosition;
 					positionY = 420 - floorRotation;
 					rotation = -1.f;
 					floorRotation++;
@@ -48,7 +52,7 @@ void createPlatforms(sf::RectangleShape *plataforma){
 						floorRotation = 0;
 					}
 					if(i < 91){
-						positionX = 50 + contadorChaoPosition;
+						positionX = 61 + contadorChaoPosition;
 						positionY = 320 + floorRotation;
 						rotation = 1.f;
 						floorRotation++;
@@ -59,7 +63,7 @@ void createPlatforms(sf::RectangleShape *plataforma){
 							floorRotation = 0;
 						}
 						if(i < 113){
-						positionX = 80 + contadorChaoPosition;
+						positionX = 91 + contadorChaoPosition;
 						positionY = 260 - floorRotation;
 						rotation = -1.f;
 						floorRotation++;
@@ -70,14 +74,14 @@ void createPlatforms(sf::RectangleShape *plataforma){
 								floorRotation = 0;
 							}
 							if(i < 123){
-							positionX = 680 - contadorChaoPosition;
+							positionX = 691 - contadorChaoPosition;
 							positionY = 185 - floorRotation;
 							rotation = 0.5f;
 							floorRotation++;
 							}
 							else {
 								if(i < 135){
-								positionX = 680 - contadorChaoPosition;
+								positionX = 691 - contadorChaoPosition;
 								positionY = 185 - floorRotation;
 								rotation = 0.f;
 								}
@@ -87,7 +91,7 @@ void createPlatforms(sf::RectangleShape *plataforma){
 										floorRotation = 0;
 									}
 									if(i < 139){
-									positionX = 285 + contadorChaoPosition;
+									positionX = 296 + contadorChaoPosition;
 									positionY = 100;
 									}
 									else {
@@ -95,7 +99,7 @@ void createPlatforms(sf::RectangleShape *plataforma){
 											contadorChaoPosition = 0;
 										}
 										if(i < 141){
-										positionX = 255 - contadorChaoPosition;
+										positionX = 266 - contadorChaoPosition;
 										positionY = 115;
 										}
 									}
@@ -107,27 +111,28 @@ void createPlatforms(sf::RectangleShape *plataforma){
 			}
 		}
 
-		plataforma[i].setSize(sf::Vector2f(30,15));
-		plataforma[i].setPosition(positionX,positionY);
-		plataforma[i].setRotation(rotation);
+		Platforms plataforma(sf::Vector2f(30,15), positionX, positionY, rotation);
+
+		plataformas.push_back(plataforma);
 
 		contadorChaoPosition += 30;
 	}
 
 	contadorChaoPosition = 0;
+
+	return plataformas;
 }
 
 int main(int argc, char **argv) {
-	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong",
-			sf::Style::Close | sf::Style::Titlebar);
+	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong",sf::Style::Close | sf::Style::Titlebar);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
-	int NumPlataforma=0;
+	bool collisionChecker;
 
-	sf::RectangleShape plataforma[141];
+	size_t numPlataforma=0;
 
-	createPlatforms(plataforma);
+	vector<Platforms> platforms = createPlatforms();
 
 	sf::Texture platformTexture;
 
@@ -137,8 +142,8 @@ int main(int argc, char **argv) {
 
 	platformTexture.setSmooth(true);
 
-	for(int i = 0; i < 141; i++){
-		plataforma[i].setTexture(&platformTexture);
+	for(size_t i = 0; i < platforms.size(); i++){
+		platforms.at(i).setTexture(platformTexture);
 	}
 
 	sf::Image icon = sf::Image { };
@@ -161,6 +166,8 @@ int main(int argc, char **argv) {
 
 		player.setVelToZero();
 
+		collisionChecker = false;
+
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
 				window.close();
@@ -169,11 +176,23 @@ int main(int argc, char **argv) {
 
 		player.move();
 
+		player.setisColliding(collisionChecker);
+
+
+		for(numPlataforma = 0; numPlataforma < platforms.size(); numPlataforma++){
+			if(player.collisionTest(platforms.at(numPlataforma))){
+				collisionChecker = true;
+				break;
+			}
+		}
+
+		player.setisColliding(collisionChecker);
+
 		window.clear(sf::Color::Black);
 		player.draw(window);
 
-		for(NumPlataforma = 0; NumPlataforma<141;NumPlataforma++){
-			window.draw(plataforma[NumPlataforma]);
+		for(numPlataforma = 0; numPlataforma<platforms.size();numPlataforma++){
+			window.draw(platforms[numPlataforma].getShape());
 		};
 
 		window.display();
