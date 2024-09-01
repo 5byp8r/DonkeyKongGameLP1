@@ -13,118 +13,6 @@
 #include "platforms.hpp"
 #include "ladder.hpp"
 
-vector<Platforms> createPlatforms(	){
-	int contadorChaoPosition = 0;
-	int floorRotation = 0;
-	int positionX = 0;
-	int positionY = 570;
-	float rotation = 0.f;
-
-	vector<Platforms> plataformas;
-
-	for(int i = 0; i < 141; i++){
-		if(i < 24){
-			positionX = 41 + contadorChaoPosition;
-		}
-		else {
-			if(i == 24){
-				contadorChaoPosition = 0;
-			}
-			if(i < 47){
-				positionX = 61 + contadorChaoPosition;
-				positionY = 480 + floorRotation;
-				rotation = 2.f;
-				floorRotation++;
-			}
-			else {
-				if(i == 47){
-					contadorChaoPosition = 0;
-					floorRotation = 0;
-				}
-				if(i < 69){
-					positionX = 91 + contadorChaoPosition;
-					positionY = 420 - floorRotation;
-					rotation = -1.f;
-					floorRotation++;
-				}
-				else {
-					if(i == 69){
-						contadorChaoPosition = 0;
-						floorRotation = 0;
-					}
-					if(i < 91){
-						positionX = 61 + contadorChaoPosition;
-						positionY = 320 + floorRotation;
-						rotation = 3.f;
-						floorRotation++;
-					}
-					else {
-						if(i == 91){
-							contadorChaoPosition = 0;
-							floorRotation = 0;
-						}
-						if(i < 113){
-						positionX = 91 + contadorChaoPosition;
-						positionY = 260 - floorRotation;
-						rotation = -1.f;
-						floorRotation++;
-						}
-						else {
-							if(i == 113){
-								contadorChaoPosition = 0;
-								floorRotation = 0;
-							}
-							if(i < 123){
-							positionX = 691 - contadorChaoPosition;
-							positionY = 175 - floorRotation;
-							rotation = 0.5f;
-							floorRotation++;
-							}
-							else {
-								if(i < 135){
-								positionX = 691 - contadorChaoPosition;
-								positionY = 175 - floorRotation;
-								rotation = 0.f;
-								}
-								else {
-									if(i == 135){
-										contadorChaoPosition = 0;
-										floorRotation = 0;
-									}
-									if(i < 139){
-									positionX = 296 + contadorChaoPosition;
-									positionY = 85;
-									}
-									else {
-										if(i == 139){
-											contadorChaoPosition = 0;
-										}
-										if(i < 141){
-										positionX = 266 - contadorChaoPosition;
-										positionY = 100;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		Platforms plataforma(sf::Vector2f(30,15), positionX, positionY, rotation);
-
-		plataformas.push_back(plataforma);
-
-		contadorChaoPosition += 30;
-	}
-
-	contadorChaoPosition = 0;
-
-	return plataformas;
-}
-
-
 int main(int argc, char **argv){
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
@@ -135,21 +23,38 @@ int main(int argc, char **argv){
 
 	bool collisionChecker;
 
-	size_t numPlataforma=0;
+	sf::Texture textureFundo;
+	sf::Sprite fundoImage;
 
-	vector<Platforms> platforms = createPlatforms();
+	if(!textureFundo.loadFromFile("assets/background.jpg")){
+		return -1;
+	}
 
+	fundoImage.setTexture(textureFundo);
+
+	vector<Platforms> platforms;
 	sf::Texture platformTexture;
+	size_t numPlataforma=0;
+	int contadorChaoPosition = 0;
+	int floorRotation = 0;
+	int positionXPlatform = 0;
+	int positionYPLatform = 0;
+	float rotation = 0.f;
+
+	for(int i = 0; i < 141; i++){
+		Platforms platform(i, sf::Vector2f(30,15), &contadorChaoPosition, &floorRotation, &positionXPlatform, &positionYPLatform, &rotation);
+		platforms.push_back(platform);
+	}
 
 	if(!platformTexture.loadFromFile("assets/floorMinecraft.png")){
 		return -1;
 	}
 
-	platformTexture.setSmooth(true);
-
 	for(size_t i = 0; i < platforms.size(); i++){
 		platforms.at(i).setTexture(platformTexture);
 	}
+
+	platformTexture.setSmooth(true);
 
 	sf::Image icon = sf::Image { };
 	if(!icon.loadFromFile("assets/iconPage.png")){
@@ -158,6 +63,28 @@ int main(int argc, char **argv){
 
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+	vector<Ladder> escadas;
+	sf::Texture ladderTexture;
+	size_t numEscada=0;
+	int contadorEscadaPosition = 0;
+	int positionXLadder = 0;
+	int positionYLadder = 0;
+
+	for(int i = 1; i < 141; i++){
+		Ladder ladder(i, sf::Vector2f(30,30), &contadorEscadaPosition, &positionXLadder, &positionYLadder);
+		escadas.push_back(ladder);
+	}
+
+	if(!ladderTexture.loadFromFile("assets/minecraftLadder.png")){
+		return -1;
+	}
+
+	for(numEscada = 0; numEscada < escadas.size(); numEscada++){
+		escadas.at(numEscada).setTexture(&ladderTexture);
+	}
+
+	ladderTexture.setSmooth(true);
+
 	Player player;
 
 	if(!player.isPlayerCreated){
@@ -165,8 +92,6 @@ int main(int argc, char **argv){
 
 		return -1;
 	}
-
-	Ladder ladder;
 
 	while(window.isOpen()){
 		sf::Event event;
@@ -189,7 +114,6 @@ int main(int argc, char **argv){
 
 		player.setisColliding(collisionChecker);
 
-
 		for(numPlataforma = 0; numPlataforma < platforms.size(); numPlataforma++){
 			if(player.collisionTest(platforms.at(numPlataforma))){
 				collisionChecker = true;
@@ -201,7 +125,11 @@ int main(int argc, char **argv){
 
 		window.clear(sf::Color::Black);
 
-		ladder.draw(window);
+		window.draw(fundoImage);
+
+		for(numEscada = 0; numEscada < escadas.size(); numEscada++){
+			escadas[numEscada].draw(window);
+		};
 
 		for(numPlataforma = 0; numPlataforma<platforms.size();numPlataforma++){
 			window.draw(platforms[numPlataforma].getShape());

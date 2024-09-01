@@ -27,6 +27,7 @@ public:
 	bool isColliding = false;
 	bool canMove = true;
 	bool isJumping = false;
+	bool canJump = true;
 	bool spaceWasPressed = false;
 	float gravity = 0.5;
 	float lastPositionY = 0.0;
@@ -77,6 +78,10 @@ public:
 		return isColliding;
 	}
 
+	bool getisJumping(){
+		return isJumping;
+	}
+
 	float getHeight(){
 		return playerSprite.getLocalBounds().height;
 	}
@@ -87,15 +92,19 @@ public:
 
 	void move(){
 		if(!isColliding && !isJumping){
-			velY += gravity;
-			canMove = false;
+			velY+=gravity;
+			if(canJump){
+				canMove = false;
+			}
+			canJump = false;
 		}else if(!isColliding && isJumping){
 			velY = -2;
-			canMove = true;
+			canJump = false;
 		}
 		else{
 			velY = 0;
 			canMove = true;
+			canJump = true;
 		}
 
 		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && canMove == true /*&& (playerSprite.getPosition().x >= playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 5)*/){
@@ -108,7 +117,7 @@ public:
 
 			velX = constVelX;
 		}
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canMove == true && !isJumping){
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canJump == true && !isJumping){
 			lastPositionY = getPositionY();
 
 			//velY = -2;
@@ -118,7 +127,7 @@ public:
 			constVelX = 4;
 		}
 
-		if(getPositionY() == lastPositionY - 30){
+		if(getPositionY() <= lastPositionY - 30){
 			//gravity = 0.5;
 			isJumping = false;
 			constVelX = 6;

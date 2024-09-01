@@ -20,19 +20,66 @@ private:
 	sf::Texture texture;
 	sf::Vector2f size;
 public:
-	Ladder(){
-		if(!texture.loadFromFile("assets/minecraftLadder.png")){
-			return;
-		}
+	Ladder(int i, sf::Vector2f size, int* contadorEscadaPosition, int* positionX, int* positionY){
+		if(i < 3){
+				*positionX = 710;
+				*positionY = 510 + *contadorEscadaPosition;
+				}
+				else {
+					if(i == 3){
+						*contadorEscadaPosition = 0;
+					}
+					if(i < 5){
+						*positionX = 110;
+						*positionY = 422 + *contadorEscadaPosition;
+					}
+					else {
+						if(i == 5){
+							*contadorEscadaPosition = 0;
+						}
+						if(i < 7){
+							*positionX = 681;
+							*positionY = 341 + *contadorEscadaPosition;
+							}
+							else {
+								if(i == 7){
+									*contadorEscadaPosition = 0;
+								}
+								if(i < 9){
+									*positionX = 101;
+									*positionY = 262 + *contadorEscadaPosition;
+								}
+								else {
+									if(i == 9){
+										*contadorEscadaPosition = 0;
+									}
+									if(i < 11){
+									*positionX = 681;
+									*positionY = 180 + *contadorEscadaPosition;
+									}
+									else {
+										if(i == 11){
+											*contadorEscadaPosition = 0;
+										}
+										if(i < 14){
+										*positionX = 386;
+										*positionY = 85 + *contadorEscadaPosition;
+										}
+									}
+								}
+							}
+						}
+					}
+		*contadorEscadaPosition += 30;
+		ladder.setSize(size);
+		ladder.setPosition(*positionX,*positionY);
+		this->size = size;
+	}
 
-		texture.setSmooth(true);
+	void setTexture(sf::Texture* texture){
+		this->texture = *texture;
 
-		this->size = sf::Vector2f(30,30);
-
-		ladder.setTexture(&texture);
-		ladder.setSize(this->size);
-
-		ladder.setPosition(300, 580);
+		ladder.setTexture(&this->texture);
 	}
 
 	void draw(sf::RenderWindow &window){
