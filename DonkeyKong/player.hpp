@@ -26,18 +26,27 @@ public:
 	bool isPlayerCreated = true;
 	bool isColliding = false;
 	bool canMove = true;
+	bool isJumping = false;
+	bool spaceWasPressed = false;
+	float gravity = 0.5;
+	float lastPositionY = 0.0;
+	int constVelX = 6;
 
 	Player(){
-		if(!texturePlayer.loadFromFile("assets/mario.png")){
+		if(!texturePlayer.loadFromFile("assets/steve.png")){
 			isPlayerCreated = false;
 		}
 		playerSprite.setTexture(texturePlayer);
 
+		texturePlayer.setSmooth(true);
+
 		playerSprite.setOrigin(playerSprite.getLocalBounds().width/2., playerSprite.getLocalBounds().height/2.);
-		playerSprite.setPosition(130,0);
+		playerSprite.setPosition(71,580);
 		playerSprite.setScale(0.065, 0.065);
 		this->positionX = 130;
 		this->positionY = 551;
+
+		//cout << "player: " << playerSprite.getOrigin().x << endl;
 	}
 
 	int getVelX(){
@@ -72,24 +81,47 @@ public:
 		return playerSprite.getLocalBounds().height;
 	}
 
+	sf::Sprite getSprite(){
+		return playerSprite;
+	}
+
 	void move(){
-		if(!isColliding){
-			velY = 2;
+		if(!isColliding && !isJumping){
+			velY += gravity;
 			canMove = false;
-		}else{
+		}else if(!isColliding && isJumping){
+			velY = -2;
+			canMove = true;
+		}
+		else{
 			velY = 0;
 			canMove = true;
 		}
 
-		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && (playerSprite.getPosition().x >= playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 5) && canMove == true){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && canMove == true /*&& (playerSprite.getPosition().x >= playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 5)*/){
 			playerSprite.setScale(-0.065, 0.065);
 
-			velX = -5;
+			velX = -constVelX;
 		}
-		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && (playerSprite.getPosition().x <= 800 - playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 4.1) && canMove == true){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && canMove == true /*&& (playerSprite.getPosition().x <= 800 - playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 4.1)*/){
 			playerSprite.setScale(0.065, 0.065);
 
-			velX = 5;
+			velX = constVelX;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canMove == true && !isJumping){
+			lastPositionY = getPositionY();
+
+			//velY = -2;
+			//gravity = 0;
+
+			isJumping = true;
+			constVelX = 4;
+		}
+
+		if(getPositionY() == lastPositionY - 30){
+			//gravity = 0.5;
+			isJumping = false;
+			constVelX = 6;
 		}
 
 		playerSprite.setPosition(playerSprite.getPosition().x + velX, playerSprite.getPosition().y + velY);
@@ -100,7 +132,7 @@ public:
 	bool collisionTest(Platforms &platform){
 		bool collision;
 
-		if(platform.getPositionX() > 400){
+		/*if(platform.getPositionX() >= 400){
 			if((getPositionX() - 12.3975 >= (platform.getPositionX())) && (getPositionX() - 12.3975 <= (platform.getPositionX() + platform.getSize().x))){
 				if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
 					collision = true;
@@ -124,12 +156,13 @@ public:
 					if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
 						collision = true;
 						playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+						cout << getPositionX() << "," << getPositionY() << "," << playerSprite.getLocalBounds().height * playerSprite.getScale().y/2 << endl;
 					}
 				}else{
 					collision = false;
 				}
-			}else if(platform.getPositionY() < 500){
-				if((getPositionX() - 14.3975 >= (platform.getPositionX())) && (getPositionX() - 14.3975 <= (platform.getPositionX() + platform.getSize().x))){
+			}else if(platform.getPositionY() <= 180){
+				if((getPositionX() + 14.3975 >= (platform.getPositionX())) && (getPositionX() - 14.3975 <= (platform.getPositionX() + platform.getSize().x))){
 					if(getPositionY() + ((playerSprite.getLocalBounds().height * playerSprite.getScale().y)/2) >= platform.getPositionY()){
 						//playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
 						collision = true;
@@ -138,6 +171,14 @@ public:
 					collision = false;
 				}
 			}
+		}*/
+
+		if(playerSprite.getGlobalBounds().intersects(platform.getShape().getGlobalBounds()) && velY > 0 && lastPositionY < platform.getPositionY()){
+			playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+			collision = true;
+
+		}else{
+			collision = false;
 		}
 
 		return collision;

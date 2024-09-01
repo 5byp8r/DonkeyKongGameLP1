@@ -11,6 +11,7 @@
 #include <SFML/audio.hpp>
 #include "player.hpp"
 #include "platforms.hpp"
+#include "ladder.hpp"
 
 vector<Platforms> createPlatforms(	){
 	int contadorChaoPosition = 0;
@@ -33,40 +34,40 @@ vector<Platforms> createPlatforms(	){
 				positionX = 61 + contadorChaoPosition;
 				positionY = 480 + floorRotation;
 				rotation = 2.f;
-				//floorRotation++;
+				floorRotation++;
 			}
 			else {
 				if(i == 47){
 					contadorChaoPosition = 0;
-					//floorRotation = 0;
+					floorRotation = 0;
 				}
 				if(i < 69){
 					positionX = 91 + contadorChaoPosition;
 					positionY = 420 - floorRotation;
 					rotation = -1.f;
-					//floorRotation++;
+					floorRotation++;
 				}
 				else {
 					if(i == 69){
 						contadorChaoPosition = 0;
-						//floorRotation = 0;
+						floorRotation = 0;
 					}
 					if(i < 91){
 						positionX = 61 + contadorChaoPosition;
 						positionY = 320 + floorRotation;
-						rotation = 1.f;
-						//floorRotation++;
+						rotation = 3.f;
+						floorRotation++;
 					}
 					else {
 						if(i == 91){
 							contadorChaoPosition = 0;
-							//floorRotation = 0;
+							floorRotation = 0;
 						}
 						if(i < 113){
 						positionX = 91 + contadorChaoPosition;
 						positionY = 260 - floorRotation;
 						rotation = -1.f;
-						//floorRotation++;
+						floorRotation++;
 						}
 						else {
 							if(i == 113){
@@ -77,7 +78,7 @@ vector<Platforms> createPlatforms(	){
 							positionX = 691 - contadorChaoPosition;
 							positionY = 175 - floorRotation;
 							rotation = 0.5f;
-							//floorRotation++;
+							floorRotation++;
 							}
 							else {
 								if(i < 135){
@@ -88,11 +89,11 @@ vector<Platforms> createPlatforms(	){
 								else {
 									if(i == 135){
 										contadorChaoPosition = 0;
-										//floorRotation = 0;
+										floorRotation = 0;
 									}
 									if(i < 139){
 									positionX = 296 + contadorChaoPosition;
-									positionY = 100;
+									positionY = 85;
 									}
 									else {
 										if(i == 139){
@@ -100,7 +101,7 @@ vector<Platforms> createPlatforms(	){
 										}
 										if(i < 141){
 										positionX = 266 - contadorChaoPosition;
-										positionY = 115;
+										positionY = 100;
 										}
 									}
 								}
@@ -125,7 +126,10 @@ vector<Platforms> createPlatforms(	){
 
 
 int main(int argc, char **argv){
-	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong",sf::Style::Close | sf::Style::Titlebar);
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
+
+	sf::RenderWindow window(sf::VideoMode(800,600), "Donkey Kong", sf::Style::Default, settings);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
@@ -137,7 +141,7 @@ int main(int argc, char **argv){
 
 	sf::Texture platformTexture;
 
-	if(!platformTexture.loadFromFile("assets/floorTexture.png")){
+	if(!platformTexture.loadFromFile("assets/floorMinecraft.png")){
 		return -1;
 	}
 
@@ -162,6 +166,8 @@ int main(int argc, char **argv){
 		return -1;
 	}
 
+	Ladder ladder;
+
 	while(window.isOpen()){
 		sf::Event event;
 
@@ -173,6 +179,10 @@ int main(int argc, char **argv){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			}
+		}
+
+		if(player.getPositionY() > 600 + player.getSprite().getLocalBounds().height * player.getSprite().getScale().y){
+			window.close();
 		}
 
 		player.move();
@@ -190,11 +200,14 @@ int main(int argc, char **argv){
 		player.setisColliding(collisionChecker);
 
 		window.clear(sf::Color::Black);
-		player.draw(window);
+
+		ladder.draw(window);
 
 		for(numPlataforma = 0; numPlataforma<platforms.size();numPlataforma++){
 			window.draw(platforms[numPlataforma].getShape());
 		};
+
+		player.draw(window);
 
 		window.display();
 		sf::sleep(sf::milliseconds(10.0f));
