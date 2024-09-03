@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
-	if(!textureFundo.loadFromFile("assets/background.jpg")){
+	if(!textureFundo.loadFromFile("assets/backgroundNight.png")){
 		return -1;
 	}
 
