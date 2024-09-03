@@ -12,6 +12,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/audio.hpp>
+#include "sounds.hpp"
+#include "musics.hpp"
 #include "player.hpp"
 #include "platforms.hpp"
 #include "ladder.hpp"
@@ -24,7 +26,7 @@ string setIcon(sf::RenderWindow &window);
 
 vector<Ladder> createLadders();
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms);
+void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music);
 
 void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player);
 

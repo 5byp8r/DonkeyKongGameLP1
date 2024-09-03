@@ -9,10 +9,12 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/audio.hpp>
-#include "../includes/player.hpp"
-#include "../includes/platforms.hpp"
-#include "../includes/ladder.hpp"
-#include "../includes/mainFunctions.hpp"
+#include "includes/sounds.hpp"
+#include "includes/musics.hpp"
+#include "includes/player.hpp"
+#include "includes/platforms.hpp"
+#include "includes/ladder.hpp"
+#include "includes/mainFunctions.hpp"
 
 using namespace std;
 
@@ -26,13 +28,14 @@ int main(int argc, char **argv){
 	sf::Texture textureFundo;
 	sf::Sprite fundoImage;
 
+	Musics backgroundMusic;
 	vector<Platforms> platforms = createPlatforms();
 	vector<Ladder> ladders = createLadders();
 	Player player;
 
 	settings.antialiasingLevel = 8;
 
-	sf::RenderWindow window(videoMode, "DonkeyKong", sf::Style::Default, settings);
+	sf::RenderWindow window(videoMode, "DonkeyKong", sf::Style::Close | sf::Style::Titlebar, settings);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
@@ -41,6 +44,14 @@ int main(int argc, char **argv){
 	}
 
 	fundoImage.setTexture(textureFundo);
+
+	if(!backgroundMusic.setMusic("assets/music.ogg")){
+		cout << "Impossível criar o som" << endl;
+
+		return -1;
+	}
+
+	backgroundMusic.play();
 
 	if(platforms.empty()){
 		cout << "Impossível criar plataformas" << endl;
@@ -74,11 +85,12 @@ int main(int argc, char **argv){
 
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
+				backgroundMusic.stop();
 				window.close();
 			}
 		}
 
-		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms);
+		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic);
 
 		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, &player);
 

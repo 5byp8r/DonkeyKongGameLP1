@@ -99,12 +99,12 @@ void Player::move(){
 		lastPositionY = getPositionY();
 
 		isJumping = true;
-		constVelX = 8;
+		constVelX = 4;
 	}
 
 	if(getPositionY() <= lastPositionY - 25){
 		isJumping = false;
-		constVelX = 8;
+		constVelX = 6;
 	}
 
 	playerSprite.setPosition(playerSprite.getPosition().x + velX, playerSprite.getPosition().y + velY);
