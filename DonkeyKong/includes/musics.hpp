@@ -2,29 +2,27 @@
  * Musics.hpp
  *
  *  Created on: 3 de set. de 2024
- *      Author: davis
+ *      Author: Davi Sollar
  */
 
 #ifndef SRC_INCLUDES_MUSICS_HPP_
 #define SRC_INCLUDES_MUSICS_HPP_
 
-#include <iostream>
-#include <SFML/audio.hpp>
+#include "audios.hpp"
 
 using namespace std;
 
-class Musics {
+class Musics: public Audio{
 private:
 	sf::Music music;
-	string musicLocation;
-
 public:
 	Musics();
-	bool setMusic(string Location);
-	string getMusicLocation();
+	bool setAudio(string location);
 	void play();
 	void pause();
 	void stop();
+	void loop();
+	void setVolume(int volume);
 };
 
 #endif /* SRC_INCLUDES_MUSICS_HPP_ */

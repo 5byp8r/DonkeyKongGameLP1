@@ -9,11 +9,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/audio.hpp>
-#include "includes/sounds.hpp"
-#include "includes/musics.hpp"
-#include "includes/player.hpp"
-#include "includes/platforms.hpp"
-#include "includes/ladder.hpp"
 #include "includes/mainFunctions.hpp"
 
 using namespace std;
@@ -35,7 +30,7 @@ int main(int argc, char **argv){
 
 	settings.antialiasingLevel = 8;
 
-	sf::RenderWindow window(videoMode, "DonkeyKong", sf::Style::Close | sf::Style::Titlebar, settings);
+	sf::RenderWindow window(videoMode, "MineKong", sf::Style::Close | sf::Style::Titlebar, settings);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
@@ -45,7 +40,7 @@ int main(int argc, char **argv){
 
 	fundoImage.setTexture(textureFundo);
 
-	if(!backgroundMusic.setMusic("assets/music.ogg")){
+	if(!backgroundMusic.setAudio("assets/music.ogg")){
 		cout << "Impossível criar o som" << endl;
 
 		return -1;

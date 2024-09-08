@@ -2,30 +2,27 @@
  * sounds.hpp
  *
  *  Created on: 3 de set. de 2024
- *      Author: davis
+ *      Author: Davi Sollar
  */
 
 #ifndef SRC_SOUNDS_HPP_
 #define SRC_SOUNDS_HPP_
 
-#include <iostream>
-#include <SFML/audio.hpp>
+#include "audios.hpp"
 
 using namespace std;
 
-class Sounds {
-protected:
+class Sounds: public Audio{
+private:
 	sf::Sound sound;
 	sf::SoundBuffer soundBuffer;
-	string soundLocation;
-
 public:
 	Sounds();
-	bool setSound(string Location);
-	string getSoundLocation();
+	bool setAudio(string location);
 	void play();
 	void pause();
 	void stop();
+	void setVolume(int volume);
 };
 
 #endif /* SRC_SOUNDS_HPP_ */

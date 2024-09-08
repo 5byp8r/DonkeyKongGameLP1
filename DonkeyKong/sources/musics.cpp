@@ -2,24 +2,20 @@
  * Musics.cpp
  *
  *  Created on: 3 de set. de 2024
- *      Author: davis
+ *      Author: Davi Sollar
  */
 
 #include "../includes/musics.hpp"
 
 Musics::Musics(){}
 
-bool Musics::setMusic(string Location){
-	if(music.openFromFile(Location)){
-		musicLocation = Location;
+bool Musics::setAudio(string location){
+	if(music.openFromFile(location)){
+		setAudioLocation(location);
 		return true;
 	}else{
 		return false;
 	}
-}
-
-string Musics::getMusicLocation(){
-	return musicLocation;
 }
 
 void Musics::play(){
@@ -32,4 +28,13 @@ void Musics::pause(){
 
 void Musics::stop(){
 	music.stop();
+}
+
+void Musics::loop(){
+	music.setLoop(true);
+}
+
+void Musics::setVolume(int volume){
+	music.setVolume(volume);
+	saveVolume(volume);
 }

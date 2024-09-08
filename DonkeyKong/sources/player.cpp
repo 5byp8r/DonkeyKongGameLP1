@@ -8,15 +8,16 @@
 #include "../includes/player.hpp"
 
 Player::Player(){
-	if(!texturePlayer.loadFromFile("assets/steve.png")){
+	if(!texturePlayer.loadFromFile("assets/steve.png") || !jumpSound.setAudio("assets/jump.wav")){
 		isPlayerCreated = false;
 	}
+
 	playerSprite.setTexture(texturePlayer);
 
 	texturePlayer.setSmooth(true);
 
 	playerSprite.setOrigin(playerSprite.getLocalBounds().width/2., playerSprite.getLocalBounds().height/2.);
-	playerSprite.setPosition(71,580);
+	playerSprite.setPosition(400,0);
 	playerSprite.setScale(0.065, 0.065);
 	this->positionX = 130;
 	this->positionY = 551;
@@ -98,6 +99,7 @@ void Player::move(){
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canJump == true && !isJumping){
 		lastPositionY = getPositionY();
 
+		jumpSound.play();
 		isJumping = true;
 		constVelX = 4;
 	}

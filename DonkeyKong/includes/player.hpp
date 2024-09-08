@@ -12,6 +12,7 @@
 #include <iostream>
 #include <ctgmath>
 #include "platforms.hpp"
+#include "sounds.hpp"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class Player{
 private:
 	sf::Texture texturePlayer;
 	sf::Sprite playerSprite;
+	Sounds jumpSound;
 	float velX = 0, velY = 0;
 	float positionX;
 	float positionY;
