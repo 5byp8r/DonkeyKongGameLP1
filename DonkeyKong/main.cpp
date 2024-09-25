@@ -85,7 +85,7 @@ int main(int argc, char **argv){
 			}
 		}
 
-		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic);
+		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders);
 
 		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, &player);
 

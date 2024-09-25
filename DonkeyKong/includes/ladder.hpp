@@ -10,7 +10,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "player.hpp"
 
 using namespace std;
 
@@ -25,6 +24,11 @@ public:
 	void setTexture(sf::Texture* texture);
 
 	void draw(sf::RenderWindow &window);
+
+	sf::RectangleShape getShape();
+
+	float getPositionY();
+	float getPositionX();
 };
 
 #endif /* LADDER_HPP_ */

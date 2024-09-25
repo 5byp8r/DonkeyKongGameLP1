@@ -12,6 +12,7 @@
 #include <iostream>
 #include <ctgmath>
 #include "platforms.hpp"
+#include "ladder.hpp"
 #include "sounds.hpp"
 
 using namespace std;
@@ -31,6 +32,9 @@ public:
 	bool isJumping = false;
 	bool canJump = true;
 	bool spaceWasPressed = false;
+	bool isInLadder = false;
+	bool canGoUp = false;
+	bool canGoDown = false;
 	float gravity = 0.5;
 	float lastPositionY = 0.0;
 	int constVelX = 8;
@@ -60,6 +64,8 @@ public:
 	void move();
 
 	bool collisionTest(Platforms &platform);
+
+	bool inLadder(Ladder &ladder);
 
 	void draw(sf::RenderWindow &window);
 };

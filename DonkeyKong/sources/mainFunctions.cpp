@@ -76,7 +76,7 @@ vector<Ladder> createLadders(){
 	return ladders;
 }
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music){
+void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders){
 	if(player->getPositionY() > 600 + player->getSprite().getLocalBounds().height * player->getSprite().getScale().y){
 		music->play();
 		window.close();
@@ -94,6 +94,12 @@ void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow 
 	}
 
 	player->setisColliding(*collisionChecker);
+
+	for(numEscada = 0; numEscada < ladders->size(); numEscada++){
+		if(player->inLadder(ladders->at(numEscada))){
+			break;
+		}
+	}
 }
 
 void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player){

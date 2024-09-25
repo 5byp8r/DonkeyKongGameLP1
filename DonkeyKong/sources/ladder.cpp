@@ -69,6 +69,18 @@ void Ladder::setTexture(sf::Texture* texture){
 	ladder.setTexture(&this->texture);
 }
 
+sf::RectangleShape Ladder::getShape(){
+	return ladder;
+}
+
+float Ladder::getPositionY(){
+	return ladder.getPosition().y;
+}
+
+float Ladder::getPositionX(){
+	return ladder.getPosition().x;
+}
+
 void Ladder::draw(sf::RenderWindow &window){
 	window.draw(ladder);
 }

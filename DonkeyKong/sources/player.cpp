@@ -17,10 +17,10 @@ Player::Player(){
 	texturePlayer.setSmooth(true);
 
 	playerSprite.setOrigin(playerSprite.getLocalBounds().width/2., playerSprite.getLocalBounds().height/2.);
-	playerSprite.setPosition(400,0);
+	playerSprite.setPosition(200,560);
 	playerSprite.setScale(0.065, 0.065);
-	this->positionX = 130;
-	this->positionY = 551;
+	this->positionX = 200;
+	this->positionY = 560;
 
 	//cout << "player: " << playerSprite.getOrigin().x << endl;
 }
@@ -66,17 +66,17 @@ sf::Sprite Player::getSprite(){
 }
 
 void Player::move(){
-	if(!isColliding && !isJumping){
+	if(!isColliding && !isJumping && !canGoUp && !canGoDown){
 		velY+=gravity;
 		if(canJump){
 			canMove = false;
 		}
 		canJump = false;
-	}else if(!isColliding && isJumping){
+	}else if(!isColliding && isJumping && !canGoUp && !canGoDown){
 		velY = -2;
 		canJump = false;
 	}
-	else if(isColliding && isJumping){
+	else if(isColliding && isJumping && !canGoUp && !canGoDown){
 		velY = -2;
 		canJump = false;
 	}
@@ -84,6 +84,23 @@ void Player::move(){
 		velY = 0;
 		canMove = true;
 		canJump = true;
+	}
+
+	if(isInLadder){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true){
+			canGoUp = true;
+
+			velY = -1;
+		}
+
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) && canMove == true){
+			canGoDown = true;
+
+			velY = 1;
+		}
+	}else{
+		canGoUp = false;
+		canGoDown = false;
 	}
 
 	if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && canMove == true /*&& (playerSprite.getPosition().x >= playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 5)*/){
@@ -99,7 +116,10 @@ void Player::move(){
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canJump == true && !isJumping){
 		lastPositionY = getPositionY();
 
-		jumpSound.play();
+		if(canJump){
+			jumpSound.play();
+		}
+
 		isJumping = true;
 		constVelX = 4;
 	}
@@ -118,7 +138,10 @@ bool Player::collisionTest(Platforms &platform){
 	bool collision;
 
 	if(playerSprite.getGlobalBounds().intersects(platform.getShape().getGlobalBounds()) && velY > 0 && lastPositionY < platform.getPositionY()){
-		playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+		if(!canGoUp && !canGoDown){
+			playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
+		}
+
 		collision = true;
 
 	}else{
@@ -126,6 +149,20 @@ bool Player::collisionTest(Platforms &platform){
 	}
 
 	return collision;
+}
+
+bool Player::inLadder(Ladder &ladder){
+
+	if((getPositionX() > ladder.getPositionX()) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x)) && (getPositionY() >= ladder.getPositionY() - 35) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))/*&& (getPositionY() >= ladder.getPositionY() + 30)*/){
+		isInLadder = true;
+	}
+	else{
+		isInLadder = false;
+	}
+
+	//0cout << isInLadder << endl;
+
+	return isInLadder;
 }
 
 void Player::draw(sf::RenderWindow &window){
