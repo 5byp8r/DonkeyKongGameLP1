@@ -102,7 +102,7 @@ void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow 
 	}
 }
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player){
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, Kong *kong){
 	window.clear(sf::Color::Black);
 
 	window.draw(fundoImage);
@@ -117,5 +117,10 @@ void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEsca
 
 	player->draw(window);
 
+	kong->draw(window);
+
 	window.display();
+}
+void kongAnimations(Kong *kong){
+	kong->chooseAnimation();
 }

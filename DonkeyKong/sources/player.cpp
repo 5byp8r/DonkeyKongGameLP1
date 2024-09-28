@@ -89,13 +89,13 @@ void Player::move(){
 	if(isInLadder){
 		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true){
 			canGoUp = true;
-
+			canJump = false;
 			velY = -1;
 		}
 
 		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) && canMove == true){
 			canGoDown = true;
-
+			canJump = false;
 			velY = 1;
 		}
 	}else{

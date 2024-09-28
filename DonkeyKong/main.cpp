@@ -27,6 +27,7 @@ int main(int argc, char **argv){
 	vector<Platforms> platforms = createPlatforms();
 	vector<Ladder> ladders = createLadders();
 	Player player;
+	Kong kong;
 
 	settings.antialiasingLevel = 8;
 
@@ -87,7 +88,9 @@ int main(int argc, char **argv){
 
 		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders);
 
-		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, &player);
+		kongAnimations(&kong);
+
+		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, &player, &kong);
 
 		sf::sleep(sf::milliseconds(10.0f));
 	}
