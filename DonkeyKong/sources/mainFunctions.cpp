@@ -76,9 +76,15 @@ vector<Ladder> createLadders(){
 	return ladders;
 }
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders){
+void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong){
 	if(player->getPositionY() > 600 + player->getSprite().getLocalBounds().height * player->getSprite().getScale().y){
-		music->play();
+		music->stop();
+		window.close();
+	}
+
+	if(player->getSprite().getGlobalBounds().intersects(kong->getSprite().getGlobalBounds()))
+	{
+		music->stop();
 		window.close();
 	}
 

@@ -22,7 +22,12 @@ Player::Player(){
 	this->positionX = 200;
 	this->positionY = 560;
 
-	//cout << "player: " << playerSprite.getOrigin().x << endl;
+	positionYLadder1 = 0;
+	positionYLadder2 = 0;
+	positionYLadder3 = 0;
+	positionYLadder4 = 0;
+	positionYLadder5 = 0;
+	positionYLadder6 = 0;
 }
 
 int Player::getVelX(){
@@ -66,17 +71,17 @@ sf::Sprite Player::getSprite(){
 }
 
 void Player::move(){
-	if(!isColliding && !isJumping && !canGoUp && !canGoDown){
+	if(!isColliding && !isJumping && !goUp && !goDown){
 		velY+=gravity;
 		if(canJump){
 			canMove = false;
 		}
 		canJump = false;
-	}else if(!isColliding && isJumping && !canGoUp && !canGoDown){
+	}else if(!isColliding && isJumping && !goUp && !goDown){
 		velY = -2;
 		canJump = false;
 	}
-	else if(isColliding && isJumping && !canGoUp && !canGoDown){
+	else if(isColliding && isJumping && !goUp && !goDown){
 		velY = -2;
 		canJump = false;
 	}
@@ -87,28 +92,56 @@ void Player::move(){
 	}
 
 	if(isInLadder){
-		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true){
-			canGoUp = true;
-			canJump = false;
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true && !isUpon){
+			goUp = true;
+			goDown = false;
+			goingUp = true;
+			goingDown = false;
 			velY = -1;
 		}
 
 		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) && canMove == true){
-			canGoDown = true;
-			canJump = false;
-			velY = 1;
+			goDown = true;
+			goUp = false;
+			goingUp = false;
+			goingDown = true;
+
+			if((getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder1 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder2 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder3 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder4 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder5 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder6)
+			{
+				velY = 0;
+
+				canMove = true;
+				goDown = false;
+				goingDown = false;
+			}else{
+				velY = 1;
+			}
 		}
 	}else{
-		canGoUp = false;
-		canGoDown = false;
+		goUp = false;
+		goDown = false;
+		goingUp = false;
+		goingDown = false;
 	}
 
-	if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && canMove == true /*&& (playerSprite.getPosition().x >= playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 5)*/){
+	if(isUpon){
+		goingUp = false;
+		goUp = false;
+		canMove = true;
+		isColliding = true;
+	}
+
+	if(goUp || goDown)
+	{
+		canJump = false;
+	}
+
+	if((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && canMove == true && !goingUp && !goingDown){
 		playerSprite.setScale(-0.065, 0.065);
 
 		velX = -constVelX;
 	}
-	if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && canMove == true /*&& (playerSprite.getPosition().x <= 800 - playerSprite.getTexture()->getSize().x * playerSprite.getScale().x / 4.1)*/){
+	if((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && canMove == true && !goingUp && !goingDown){
 		playerSprite.setScale(0.065, 0.065);
 
 		velX = constVelX;
@@ -116,9 +149,7 @@ void Player::move(){
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canJump == true && !isJumping){
 		lastPositionY = getPositionY();
 
-		if(canJump){
-			jumpSound.play();
-		}
+		jumpSound.play();
 
 		isJumping = true;
 		constVelX = 4;
@@ -126,22 +157,25 @@ void Player::move(){
 
 	if(getPositionY() <= lastPositionY - 25){
 		isJumping = false;
-		constVelX = 6;
+		constVelX = 8;
 	}
 
 	playerSprite.setPosition(playerSprite.getPosition().x + velX, playerSprite.getPosition().y + velY);
 	positionX = playerSprite.getPosition().x;
 	positionY = playerSprite.getPosition().y;
+
+	//cout << goUp << "," << goDown << "," << goingUp << "," << goingDown << "," << canMove << "," << canJump << "," << isJumping << "," << isColliding << "," << isInLadder << "," << isUpon << ", velY:" << velY << ", constVelX:" << constVelX << ",velX:" << velX  << "," << lastPositionY << endl;
 }
 
 bool Player::collisionTest(Platforms &platform){
 	bool collision;
 
 	if(playerSprite.getGlobalBounds().intersects(platform.getShape().getGlobalBounds()) && velY > 0 && lastPositionY < platform.getPositionY()){
-		if(!canGoUp && !canGoDown){
+		if((!goUp && !goDown)){
 			playerSprite.setPosition(getPositionX(), (platform.getPositionY() - playerSprite.getLocalBounds().height * playerSprite.getScale().y/2));
 		}
 
+		lastPositionY = 0;
 		collision = true;
 
 	}else{
@@ -152,15 +186,111 @@ bool Player::collisionTest(Platforms &platform){
 }
 
 bool Player::inLadder(Ladder &ladder){
+	if(ladder.getPositionY() > 503){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 30) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
 
-	if((getPositionX() > ladder.getPositionX()) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x)) && (getPositionY() >= ladder.getPositionY() - 35) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))/*&& (getPositionY() >= ladder.getPositionY() + 30)*/){
-		isInLadder = true;
-	}
-	else{
-		isInLadder = false;
+		if(getPositionY() < ladder.getPositionY() - 28){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 536){
+			positionYLadder1 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+		}
+	}else if(ladder.getPositionY() > 418 && ladder.getPositionY() < 500){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
+
+		if(getPositionY() < ladder.getPositionY() - 21){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 449 && ladder.getPositionY() < 536){
+			positionYLadder2 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
+		}
+	}else if(ladder.getPositionY() > 340 && ladder.getPositionY() < 418){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
+
+		if(getPositionY() < ladder.getPositionY() - 19.3){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 369 && ladder.getPositionY() < 449){
+			positionYLadder3 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+		}
+	}else if(ladder.getPositionY() > 257 && ladder.getPositionY() < 340){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
+
+		if(getPositionY() < ladder.getPositionY() - 21){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 288 && ladder.getPositionY() < 369){
+			positionYLadder4 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
+		}
+	}else if(ladder.getPositionY() > 173 && ladder.getPositionY() < 257){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 27) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
+
+		if(getPositionY() < ladder.getPositionY() - 25){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 205 && ladder.getPositionY() < 250){
+			positionYLadder5 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+		}
+	}else if(ladder.getPositionY() > 83 && ladder.getPositionY() < 165){
+		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 27) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
+			isInLadder = true;
+		}
+		else{
+			isInLadder = false;
+		}
+
+		if(getPositionY() < ladder.getPositionY() - 18.5){
+			isUpon = true;
+		}else{
+			isUpon = false;
+		}
+
+		if(ladder.getPositionY() > 135 && ladder.getPositionY() < 162){
+			positionYLadder6 = (ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y) - 10;
+		}
 	}
 
-	//0cout << isInLadder << endl;
+	//cout << isInLadder << endl;
 
 	return isInLadder;
 }

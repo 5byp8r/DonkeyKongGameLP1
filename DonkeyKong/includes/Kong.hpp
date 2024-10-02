@@ -39,6 +39,8 @@ public:
 	void chooseAnimation();
 
 	void draw(sf::RenderWindow &window);
+
+	sf::Sprite getSprite();
 };
 
 #endif /* KONG_HPP_ */

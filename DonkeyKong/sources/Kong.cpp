@@ -84,3 +84,7 @@ void Kong::chooseAnimation(){
 void Kong::draw(sf::RenderWindow &window){
 	window.draw(spriteKong);
 }
+
+sf::Sprite Kong::getSprite(){
+	return spriteKong;
+}

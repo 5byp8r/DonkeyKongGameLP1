@@ -84,9 +84,13 @@ int main(int argc, char **argv){
 				backgroundMusic.stop();
 				window.close();
 			}
+
+			if(event.type == sf::Event::MouseButtonPressed){
+				cout << event.mouseButton.y << endl;
+			}
 		}
 
-		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders);
+		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, &kong);
 
 		kongAnimations(&kong);
 
@@ -94,6 +98,8 @@ int main(int argc, char **argv){
 
 		sf::sleep(sf::milliseconds(10.0f));
 	}
+
+	//cout << player.positionYLadder1 << "," << player.positionYLadder2 << "," << player.positionYLadder3 << "," << player.positionYLadder4 << "," << player.positionYLadder5 << "," << player.positionYLadder6 << endl;
 
 	return 0;
 }

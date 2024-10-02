@@ -33,10 +33,19 @@ public:
 	bool canJump = true;
 	bool spaceWasPressed = false;
 	bool isInLadder = false;
-	bool canGoUp = false;
-	bool canGoDown = false;
+	bool goUp = false;
+	bool goDown = false;
+	bool goingUp = false;
+	bool goingDown = false;
+	bool isUpon = false;
 	float gravity = 0.5;
 	float lastPositionY = 0.0;
+	float positionYLadder1;
+	float positionYLadder2;
+	float positionYLadder3;
+	float positionYLadder4;
+	float positionYLadder5;
+	float positionYLadder6;
 	int constVelX = 8;
 
 	Player();
