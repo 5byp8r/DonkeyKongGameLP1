@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <ctgmath>
+#include <vector>
 #include "platforms.hpp"
 #include "ladder.hpp"
 #include "sounds.hpp"
@@ -40,15 +41,13 @@ public:
 	bool isUpon = false;
 	float gravity = 0.5;
 	float lastPositionY = 0.0;
-	float positionYLadder1;
-	float positionYLadder2;
-	float positionYLadder3;
-	float positionYLadder4;
-	float positionYLadder5;
-	float positionYLadder6;
+
+	vector<float> positionYLadders;
 	int constVelX = 8;
 
 	Player();
+
+	~Player();
 
 	int getVelX();
 

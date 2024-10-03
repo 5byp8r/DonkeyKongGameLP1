@@ -21,14 +21,13 @@ Player::Player(){
 	playerSprite.setScale(0.065, 0.065);
 	this->positionX = 200;
 	this->positionY = 560;
-
-	positionYLadder1 = 0;
-	positionYLadder2 = 0;
-	positionYLadder3 = 0;
-	positionYLadder4 = 0;
-	positionYLadder5 = 0;
-	positionYLadder6 = 0;
+	for (int i = 0; i < 6; i++){
+		positionYLadders.push_back(0);
+	}
 }
+
+
+Player::~Player(){}
 
 int Player::getVelX(){
 	return velX;
@@ -92,7 +91,7 @@ void Player::move(){
 	}
 
 	if(isInLadder){
-		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true && !isUpon){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) && canMove == true && !isUpon && canJump){
 			goUp = true;
 			goDown = false;
 			goingUp = true;
@@ -100,13 +99,13 @@ void Player::move(){
 			velY = -1;
 		}
 
-		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) && canMove == true){
+		if((sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) && canMove == true && canJump){
 			goDown = true;
 			goUp = false;
 			goingUp = false;
 			goingDown = true;
 
-			if((getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder1 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder2 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder3 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder4 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder5 || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadder6)
+			if((getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(0) || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(1) || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(2) || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(3) || (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(4) 	|| (getPositionY() + playerSprite.getLocalBounds().height * playerSprite.getScale().y/2) == positionYLadders.at(5))
 			{
 				velY = 0;
 
@@ -201,7 +200,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 536){
-			positionYLadder1 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+			positionYLadders[0] = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
 		}
 	}else if(ladder.getPositionY() > 418 && ladder.getPositionY() < 500){
 		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
@@ -218,7 +217,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 449 && ladder.getPositionY() < 536){
-			positionYLadder2 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
+			positionYLadders[1] = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
 		}
 	}else if(ladder.getPositionY() > 340 && ladder.getPositionY() < 418){
 		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
@@ -235,7 +234,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 369 && ladder.getPositionY() < 449){
-			positionYLadder3 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+			positionYLadders[2] = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
 		}
 	}else if(ladder.getPositionY() > 257 && ladder.getPositionY() < 340){
 		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 23) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
@@ -252,7 +251,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 288 && ladder.getPositionY() < 369){
-			positionYLadder4 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
+			positionYLadders[3] = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y - 1;
 		}
 	}else if(ladder.getPositionY() > 173 && ladder.getPositionY() < 257){
 		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 27) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
@@ -269,7 +268,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 205 && ladder.getPositionY() < 250){
-			positionYLadder5 = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
+			positionYLadders[4] = ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y;
 		}
 	}else if(ladder.getPositionY() > 83 && ladder.getPositionY() < 165){
 		if((getPositionX() > (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x / 5))) && getPositionX() < (ladder.getPositionX() + (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x) - (ladder.getShape().getLocalBounds().width * ladder.getShape().getScale().x/5)) && (getPositionY() >= ladder.getPositionY() - 27) && (getPositionY() <= (ladder.getPositionY() + (ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y)))){
@@ -286,7 +285,7 @@ bool Player::inLadder(Ladder &ladder){
 		}
 
 		if(ladder.getPositionY() > 135 && ladder.getPositionY() < 162){
-			positionYLadder6 = (ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y) - 10;
+			positionYLadders[5] = (ladder.getPositionY() + ladder.getShape().getLocalBounds().height * ladder.getShape().getScale().y) - 10;
 		}
 	}
 

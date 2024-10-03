@@ -76,16 +76,14 @@ vector<Ladder> createLadders(){
 	return ladders;
 }
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong){
+void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong, bool *isDead, bool *isWin){
 	if(player->getPositionY() > 600 + player->getSprite().getLocalBounds().height * player->getSprite().getScale().y){
-		music->stop();
-		window.close();
+		*isDead = true;
 	}
 
 	if(player->getSprite().getGlobalBounds().intersects(kong->getSprite().getGlobalBounds()))
 	{
-		music->stop();
-		window.close();
+		*isDead = true;
 	}
 
 	player->move();
@@ -129,4 +127,15 @@ void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEsca
 }
 void kongAnimations(Kong *kong){
 	kong->chooseAnimation();
+}
+void DeadDetector(Player *&player, Kong *&kong, bool *isDead, bool *isWin, Musics *music){
+	if(*isDead){
+		 	delete player;
+		 	delete kong;
+			music->stop();
+			player = new Player();
+			kong = new Kong();
+			music->play();
+			*isDead = false;
+		}
 }

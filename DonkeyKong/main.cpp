@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/audio.hpp>
 #include "includes/mainFunctions.hpp"
@@ -26,8 +25,10 @@ int main(int argc, char **argv){
 	Musics backgroundMusic;
 	vector<Platforms> platforms = createPlatforms();
 	vector<Ladder> ladders = createLadders();
-	Player player;
-	Kong kong;
+	Player* player = new Player();
+	Kong* kong = new Kong();
+	bool isDead = false;
+	bool isWin = false;
 
 	settings.antialiasingLevel = 8;
 
@@ -66,7 +67,7 @@ int main(int argc, char **argv){
 		return -1;
 	}
 
-	if(!player.isPlayerCreated){
+	if(!player->isPlayerCreated){
 		cout << "Player não criado" << endl;
 
 		return -1;
@@ -75,7 +76,9 @@ int main(int argc, char **argv){
 	while(window.isOpen()){
 		sf::Event event;
 
-		player.setVelToZero();
+		DeadDetector(player, kong, &isDead, &isWin, &backgroundMusic);
+
+		player->setVelToZero();
 
 		collisionChecker = false;
 
@@ -90,14 +93,17 @@ int main(int argc, char **argv){
 			}
 		}
 
-		checkPlayerStatus(&player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, &kong);
+		checkPlayerStatus(player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, kong, &isDead, &isWin);
 
-		kongAnimations(&kong);
+		kongAnimations(kong);
 
-		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, &player, &kong);
+		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, player, kong);
 
 		sf::sleep(sf::milliseconds(10.0f));
 	}
+
+	delete player;
+    delete kong;
 
 	//cout << player.positionYLadder1 << "," << player.positionYLadder2 << "," << player.positionYLadder3 << "," << player.positionYLadder4 << "," << player.positionYLadder5 << "," << player.positionYLadder6 << endl;
 

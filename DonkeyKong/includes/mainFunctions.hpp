@@ -27,10 +27,12 @@ string setIcon(sf::RenderWindow &window);
 
 vector<Ladder> createLadders();
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong);
+void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong, bool *isDead, bool *isWin);
 
 void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, Kong *kong);
 
 void kongAnimations(Kong *kong);
+
+void DeadDetector(Player *&player, Kong *&kong, bool *isDead, bool *isWin, Musics *music);
 
 #endif /* SOURCE_MAINFUNCTIONS_HPP_ */
