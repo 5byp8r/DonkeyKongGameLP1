@@ -13,19 +13,26 @@
 using namespace std;
 
 int main(int argc, char **argv){
+	std::srand(std::time(0));
+
 	size_t numEscada = 0;
 	size_t numPlataforma = 0;
-	bool collisionChecker;
+	size_t numBarrels = 0;
+	bool collisionCheckerPlayer;
+	vector<bool> collisionCheckerBarrels;
 
 	sf::ContextSettings settings;
 	sf::VideoMode videoMode(800,600);
 	sf::Texture textureFundo;
+	sf::Texture* textureBarrel = new sf::Texture;
 	sf::Sprite fundoImage;
 
 	Musics backgroundMusic;
 	vector<Platforms> platforms = createPlatforms();
 	vector<Ladder> ladders = createLadders();
+	vector<Barrel> barrels;
 	Player* player = new Player();
+	//Barrel* barrel = new Barrel();
 	Kong* kong = new Kong();
 	bool isDead = false;
 	bool isWin = false;
@@ -41,6 +48,12 @@ int main(int argc, char **argv){
 	}
 
 	fundoImage.setTexture(textureFundo);
+
+	if(!textureBarrel->loadFromFile("assets/barrel.png")){
+		return -1;
+	}
+
+	textureBarrel->setSmooth(true);
 
 	if(!backgroundMusic.setAudio("assets/music.ogg")){
 		cout << "Impossível criar o som" << endl;
@@ -73,14 +86,25 @@ int main(int argc, char **argv){
 		return -1;
 	}
 
+	if(!kong->isKongCreated){
+		cout << "Kong não criado" << endl;
+
+		return -1;
+	}
+
 	while(window.isOpen()){
 		sf::Event event;
 
-		DeadDetector(player, kong, &isDead, &isWin, &backgroundMusic);
+		kongAnimations(kong, &barrels, &collisionCheckerBarrels, textureBarrel);
+
+		deadDetector(player, &barrels, kong, &isDead, &isWin, &backgroundMusic);
 
 		player->setVelToZero();
 
-		collisionChecker = false;
+		collisionCheckerPlayer = false;
+		for(numBarrels = 0; numBarrels < barrels.size(); numBarrels++){
+		collisionCheckerBarrels.at(numBarrels) = false;
+		}
 
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
@@ -89,21 +113,20 @@ int main(int argc, char **argv){
 			}
 
 			if(event.type == sf::Event::MouseButtonPressed){
-				cout << event.mouseButton.y << endl;
+				cout << event.mouseButton.x << "," << event.mouseButton.y << endl;
 			}
 		}
 
-		checkPlayerStatus(player, &collisionChecker, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, kong, &isDead, &isWin);
+		checkPlayerStatus(player, &barrels, numBarrels, &collisionCheckerPlayer, &collisionCheckerBarrels, window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, kong, &isDead, &isWin);
 
-		kongAnimations(kong);
-
-		windowDraw(window, fundoImage, numEscada, numPlataforma, &ladders, &platforms, player, kong);
+		windowDraw(window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong);
 
 		sf::sleep(sf::milliseconds(10.0f));
 	}
 
 	delete player;
     delete kong;
+	delete textureBarrel;
 
 	//cout << player.positionYLadder1 << "," << player.positionYLadder2 << "," << player.positionYLadder3 << "," << player.positionYLadder4 << "," << player.positionYLadder5 << "," << player.positionYLadder6 << endl;
 

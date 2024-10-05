@@ -16,12 +16,15 @@
 class Kong {
 private:
 	sf::Texture textureKong;
-	sf::Sprite spriteKong;
+	sf::Texture barrelKong;
 	sf::Texture danceKong;
 	sf::Texture happyKong;
+	sf::Sprite spriteKong;
 public:
+	bool isKongCreated = true;
 	bool firstTexture = true;
 	bool danceTexture = false;
+	bool barrelTexture = false;
 	sf::Clock clock;
 
 	Kong();
@@ -33,6 +36,8 @@ public:
 	void danceAnimation1();
 
 	void danceAnimation2();
+
+	void barrelAnimation();
 
 	void happyAnimation();
 

@@ -76,37 +76,96 @@ vector<Ladder> createLadders(){
 	return ladders;
 }
 
-void checkPlayerStatus(Player *player, bool *collisionChecker, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong, bool *isDead, bool *isWin){
+void deadDetector(Player *&player, vector<Barrel> *barrels, Kong *&kong, bool *isDead, bool *isWin, Musics *music){
+	if(*isDead){
+		delete player;
+		delete kong;
+		barrels->clear();
+		music->stop();
+		player = new Player();
+		kong = new Kong();
+		music->play();
+		*isDead = false;
+	}
+}
+
+void kongAnimations(Kong *kong, vector<Barrel> *barrels, vector<bool> *collisionCheckerBarrels, sf::Texture *textureBarrel){
+	kong->chooseAnimation();
+	if(kong->barrelTexture == true){
+		for(int i = 0; i < (kong->randomAnimation()%2)+1; i++){
+			barrelCreator(barrels, collisionCheckerBarrels, textureBarrel, kong);
+		}
+		kong->barrelTexture = false;
+	}
+}
+
+void barrelCreator(vector<Barrel> *barrels, vector<bool> *collisionCheckerBarrels, sf::Texture *textureBarrel, Kong *kong){
+	Barrel barrel;
+
+	barrel.setVelToZero();
+	barrels->push_back(barrel);
+
+	barrels->at(barrels->size() - 1).setTexture(textureBarrel);
+
+	collisionCheckerBarrels->push_back(false);
+}
+
+void checkPlayerStatus(Player *player, vector<Barrel> *barrels, size_t numBarrels, bool *collisionCheckerPlayer, vector<bool> *collisionCheckerBarrels, sf::RenderWindow &window, size_t numPlataforma, vector<Platforms> *platforms, Musics *music, size_t numEscada, vector<Ladder> *ladders, Kong *kong, bool *isDead, bool *isWin){
 	if(player->getPositionY() > 600 + player->getSprite().getLocalBounds().height * player->getSprite().getScale().y){
 		*isDead = true;
 	}
+
+	player->move();
 
 	if(player->getSprite().getGlobalBounds().intersects(kong->getSprite().getGlobalBounds()))
 	{
 		*isDead = true;
 	}
 
-	player->move();
-
-	player->setisColliding(*collisionChecker);
+	player->setisColliding(*collisionCheckerPlayer);
 
 	for(numPlataforma = 0; numPlataforma < platforms->size(); numPlataforma++){
 		if(player->collisionTest(platforms->at(numPlataforma))){
-			*collisionChecker = true;
+			*collisionCheckerPlayer = true;
 			break;
 		}
 	}
 
-	player->setisColliding(*collisionChecker);
+	player->setisColliding(*collisionCheckerPlayer);
 
 	for(numEscada = 0; numEscada < ladders->size(); numEscada++){
 		if(player->inLadder(ladders->at(numEscada))){
 			break;
 		}
 	}
+
+	for(numBarrels = 0; numBarrels < barrels->size(); numBarrels++){
+			barrels->at(numBarrels).move();
+
+			if(player->getSprite().getGlobalBounds().intersects(barrels->at(numBarrels).getSprite().getGlobalBounds())){
+				*isDead = true;
+			}
+
+			barrels->at(numBarrels).setisColliding(collisionCheckerBarrels->at(numBarrels));
+
+			for(numPlataforma = 0; numPlataforma < platforms->size(); numPlataforma++){
+				if(barrels->at(numBarrels).collisionTest(platforms->at(numPlataforma))){
+					collisionCheckerBarrels->at(numBarrels) = true;
+					break;
+				}
+			}
+
+			barrels->at(numBarrels).setisColliding(collisionCheckerBarrels->at(numBarrels));
+
+			for(numEscada = 0; numEscada < ladders->size(); numEscada++){
+				if(barrels->at(numBarrels).inLadder(ladders->at(numEscada))){
+					break;
+				}
+			}
+		}
 }
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, Kong *kong){
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong){
 	window.clear(sf::Color::Black);
 
 	window.draw(fundoImage);
@@ -119,23 +178,13 @@ void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEsca
 		window.draw(platforms->at(numPlataforma).getShape());
 	};
 
+	for(numBarrels = 0; numBarrels < barrels->size(); numBarrels++){
+		barrels->at(numBarrels).draw(window);
+	};
+
 	player->draw(window);
 
 	kong->draw(window);
 
 	window.display();
-}
-void kongAnimations(Kong *kong){
-	kong->chooseAnimation();
-}
-void DeadDetector(Player *&player, Kong *&kong, bool *isDead, bool *isWin, Musics *music){
-	if(*isDead){
-		 	delete player;
-		 	delete kong;
-			music->stop();
-			player = new Player();
-			kong = new Kong();
-			music->play();
-			*isDead = false;
-		}
 }
