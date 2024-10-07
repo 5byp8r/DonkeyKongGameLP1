@@ -23,7 +23,9 @@ Game::Game(){
 	winTime = new sf::Time;
 	*winTime = sf::Time::Zero;
 	recordTime = new sf::Time;
-	*recordTime = sf::seconds(20.0f);
+	*recordTime = sf::seconds(99999999.9f);
+	devTime = new sf::Time;
+	*devTime = sf::seconds(20.0f);
 	textureBarrel = new sf::Texture;
 	platforms = createPlatforms();
 	ladders = createLadders();
@@ -84,7 +86,7 @@ void Game::update(){
 			if(!isPaused && !isWon){
 				deadDetector(player, &barrels, kong, &isDead, &backgroundMusic, gameClock, gameTime, pausedTime, pausedTimeOld);
 
-				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, &timePause, &isPaused, &isWon);
+				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, devTime, &timePause, &isPaused, &isWon);
 
 				hudUpdater(&txtTime, &font, gameTime, *window);
 
@@ -102,7 +104,7 @@ void Game::update(){
 				windowDraw(*window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong, &txtTime);
 			}
 			else if(isPaused && !isWon){
-				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, &timePause, &isPaused, &isWon);
+				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, devTime, &timePause, &isPaused, &isWon);
 
 				pauseMenu(&txtPause1, &txtPause2, &font, *window);
 
@@ -111,9 +113,9 @@ void Game::update(){
 			else if(!isPaused && isWon){
 				backgroundMusic.stop();
 
-				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, &timePause, &isPaused, &isWon);
+				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, devTime, &timePause, &isPaused, &isWon);
 
-				winMenu(&txtWin1, &txtWin2, &txtWin3, &font, winTime, recordTime, *window);
+				winMenu(&txtWin1, &txtWin2, &txtWin3, &font, winTime, recordTime, devTime, *window);
 
 				windowDraw(*window, fundoImage, &txtWin1, &txtWin2, &txtWin3);
 			}

@@ -48,10 +48,10 @@ void barrelCreator(vector<Barrel> *barrels, vector<bool> *collisionCheckerBarrel
 
 void deadDetector(Player *&player, vector<Barrel> *barrels, Kong *&kong, bool *isDead, Musics *music, sf::Clock *gameClock, sf::Time *gameTime, sf::Time *pausedTime, sf::Time *pausedTimeOld);
 
-void timeManager(sf::Clock *gameClock, sf::Time *gameTime, sf::Time *pausedTime, sf::Time *pausedTimeOld, sf::Time *winTime, sf::Time *recordTime, bool *timePause, bool *isPaused, bool *isWon);
+void timeManager(sf::Clock *gameClock, sf::Time *gameTime, sf::Time *pausedTime, sf::Time *pausedTimeOld, sf::Time *winTime, sf::Time *recordTime, sf::Time *devTime, bool *timePause, bool *isPaused, bool *isWon);
 
 void pauseMenu(sf::Text *txtPause1, sf::Text *txtPause2, sf::Font *font, sf::RenderWindow &window);
 
-void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *font, sf::Time *winTime, sf::Time *recordTime, sf::RenderWindow &window);
+void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *font, sf::Time *winTime, sf::Time *recordTime, sf::Time *devTime, sf::RenderWindow &window);
 
 #endif /* SOURCE_MAINFUNCTIONS_HPP_ */

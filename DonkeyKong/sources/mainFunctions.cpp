@@ -212,6 +212,7 @@ void checkPlayerStatus(Player *player, vector<Barrel> *barrels, size_t numBarrel
 			*isDead = true;
 		}
 
+
 		barrels->at(numBarrels).setisColliding(collisionCheckerBarrels->at(numBarrels));
 
 		for(numPlataforma = 0; numPlataforma < platforms->size(); numPlataforma++){
@@ -235,8 +236,11 @@ void checkPlayerStatus(Player *player, vector<Barrel> *barrels, size_t numBarrel
 	}
 }
 
-void timeManager(sf::Clock *gameClock, sf::Time *gameTime, sf::Time *pausedTime, sf::Time *pausedTimeOld, sf::Time *winTime, sf::Time *recordTime, bool *timePause, bool *isPaused, bool *isWon){
+void timeManager(sf::Clock *gameClock, sf::Time *gameTime, sf::Time *pausedTime, sf::Time *pausedTimeOld, sf::Time *winTime, sf::Time *recordTime, sf::Time *devTime, bool *timePause, bool *isPaused, bool *isWon){
 	if(!(*isPaused) && !(*isWon)){
+		if(*recordTime < *devTime){
+			*devTime = sf::Time::Zero;
+		}
 		*pausedTimeOld = *pausedTime;
 		*gameTime = gameClock->getElapsedTime();
 		*gameTime = *gameTime - *pausedTime;
@@ -290,7 +294,7 @@ void pauseMenu(sf::Text *txtPause1, sf::Text *txtPause2, sf::Font *font, sf::Ren
 	txtPause2->setPosition(sf::Vector2f(window.getSize().x/2 - txtPause2->getGlobalBounds().width/2, window.getSize().y/2 + txtPause2->getGlobalBounds().height/2 + 15));
 }
 
-void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *font, sf::Time *winTime, sf::Time *recordTime, sf::RenderWindow &window){
+void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *font, sf::Time *winTime, sf::Time *recordTime, sf::Time *devTime, sf::RenderWindow &window){
 	txtWin1->setString("YOU WIN");
 	txtWin1->setFont(*font);
 	txtWin1->setStyle(sf::Text::Bold);
@@ -298,7 +302,6 @@ void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *
 	txtWin1->setPosition(sf::Vector2f(window.getSize().x/2 - txtWin1->getGlobalBounds().width/2, window.getSize().y/2 - txtWin1->getGlobalBounds().height/2 - 30));
 
 	if(*winTime == *recordTime){
-		*recordTime = *winTime;
 		float seconds = winTime->asSeconds();
 		seconds = floorf(seconds * 100) / 100;
 		int minutes = seconds / 60;
@@ -306,7 +309,16 @@ void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *
 		int seconds2 = seconds;
 		int milliseconds = (seconds - seconds2) * 100;
 		stringstream ss;
-		ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ". You beat the dev record!";
+		if(*recordTime < *devTime){
+			ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ". You beat the dev time!";
+		}
+		else if(*devTime == sf::Time::Zero){
+			ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ". You beat your record!";
+		}
+		else{
+			ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ". You beat your record! Now beat the dev time!";
+			txtWin2->setLetterSpacing(0.6);
+		}
 		txtWin2->setString(ss.str());
 	}
 	else{
@@ -316,15 +328,28 @@ void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *
 		secondsWin = secondsWin - minutesWin * 60;
 		int seconds2Win = secondsWin;
 		int millisecondsWin = (secondsWin - seconds2Win) * 100;
-		float seconds = recordTime->asSeconds();
-		seconds = floorf(seconds * 100) / 100;
-		int minutes = seconds / 60;
-		seconds = seconds - minutes * 60;
-		int seconds2 = seconds;
-		int milliseconds = (seconds - seconds2) * 100;
-		stringstream ss;
-		ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutesWin << ":" << std::setfill('0') << std::setw(2) << seconds2Win << "." << std::setfill('0') << std::setw(2) << millisecondsWin << ". The dev record is: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ".";
-		txtWin2->setString(ss.str());
+		if(*winTime < sf::seconds(30.0f) && *devTime != sf::Time::Zero){
+			float seconds = devTime->asSeconds();
+			seconds = floorf(seconds * 100) / 100;
+			int minutes = seconds / 60;
+			seconds = seconds - minutes * 60;
+			int seconds2 = seconds;
+			int milliseconds = (seconds - seconds2) * 100;
+			stringstream ss;
+			ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutesWin << ":" << std::setfill('0') << std::setw(2) << seconds2Win << "." << std::setfill('0') << std::setw(2) << millisecondsWin << ".The dev time is: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ".";
+			txtWin2->setString(ss.str());
+		}
+		else{
+			float seconds = devTime->asSeconds();
+			seconds = floorf(seconds * 100) / 100;
+			int minutes = seconds / 60;
+			seconds = seconds - minutes * 60;
+			int seconds2 = seconds;
+			int milliseconds = (seconds - seconds2) * 100;
+			stringstream ss;
+			ss << "Your time was: " << std::setfill('0') << std::setw(1) << minutesWin << ":" << std::setfill('0') << std::setw(2) << seconds2Win << "." << std::setfill('0') << std::setw(2) << millisecondsWin << ".Your record is: " << std::setfill('0') << std::setw(1) << minutes << ":" << std::setfill('0') << std::setw(2) << seconds2 << "." << std::setfill('0') << std::setw(2) << milliseconds << ".";
+			txtWin2->setString(ss.str());
+		}
 	}
 	txtWin2->setFont(*font);
 	txtWin2->setCharacterSize(20);

@@ -31,6 +31,7 @@ private:
 		sf::Time *pausedTimeOld;
 		sf::Time *winTime;
 		sf::Time *recordTime;
+		sf::Time *devTime;
 		sf::Texture textureFundo;
 		sf::Texture* textureBarrel;
 		sf::Sprite fundoImage;

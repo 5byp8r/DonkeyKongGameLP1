@@ -40,12 +40,11 @@ void Kong::firstSprite(){
 }
 
 void Kong::danceAnimation1(){
-
 	spriteKong.setTexture(danceKong);
 	clock.restart();
 	firstTexture = false;
 	danceTexture = true;
-
+	forceBarrel1 = true;
 }
 
 void Kong::danceAnimation2(){
@@ -54,7 +53,6 @@ void Kong::danceAnimation2(){
 	spriteKong.setPosition(170, 79);
 	clock.restart();
 	danceTexture = false;
-
 }
 
 void Kong::barrelAnimation(){
@@ -64,14 +62,15 @@ void Kong::barrelAnimation(){
 	clock.restart();
 	firstTexture = false;
 	barrelTexture = true;
+	forceBarrel1 = false;
+	forceBarrel2 = false;
 }
 
 void Kong::happyAnimation(){
-
 	spriteKong.setTexture(happyKong);
 	clock.restart();
 	firstTexture = false;
-
+	forceBarrel2 = true;
 }
 
 void Kong::chooseAnimation(){
@@ -80,14 +79,14 @@ void Kong::chooseAnimation(){
 
 		if ((firstTexture == true) && (time > 0.2)) {
 			//clock.restart();
-			if(i>25 && i<75){
-				barrelAnimation();
+			if(i>=75 && !forceBarrel1){
+				danceAnimation1();
 			}
-			else if(i<=25){
+			else if(i<=25 && !forceBarrel2){
 				happyAnimation();
 			}
-			else if(i>=75){
-				danceAnimation1();
+			else{
+				barrelAnimation();
 			}
 		}
 

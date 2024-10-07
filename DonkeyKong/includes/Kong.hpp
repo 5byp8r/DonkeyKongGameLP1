@@ -25,6 +25,8 @@ public:
 	bool firstTexture = true;
 	bool danceTexture = false;
 	bool barrelTexture = false;
+	bool forceBarrel1 = true;
+	bool forceBarrel2 = true;
 	sf::Clock clock;
 
 	Kong();
