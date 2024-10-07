@@ -31,6 +31,7 @@ Game::Game(){
 	ladders = createLadders();
 	player = new Player();
 	kong = new Kong();
+	alex = new Alex();
 	isDead = false;
 	isPaused = false;
 	isWon = false;
@@ -45,7 +46,7 @@ bool Game::start(){
 	window->setFramerateLimit(60);
 	window->setVerticalSyncEnabled(true);
 
-	if(!testCreation(*window, &textureFundo, &fundoImage, textureBarrel, &font, &backgroundMusic, &platforms, &ladders, &barrels, player, kong)){
+	if(!testCreation(*window, &textureFundo, &fundoImage, textureBarrel, &font, &backgroundMusic, &platforms, &ladders, &barrels, player, kong, alex)){
 		return false;
 	}
 
@@ -101,14 +102,14 @@ void Game::update(){
 
 				checkPlayerStatus(player, &barrels, numBarrels, &collisionCheckerPlayer, &collisionCheckerBarrels, *window, numPlataforma, &platforms, &backgroundMusic, numEscada, &ladders, kong, &isDead, &isWon);
 
-				windowDraw(*window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong, &txtTime);
+				windowDraw(*window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong, &txtTime, alex);
 			}
 			else if(isPaused && !isWon){
 				timeManager(gameClock, gameTime, pausedTime, pausedTimeOld, winTime, recordTime, devTime, &timePause, &isPaused, &isWon);
 
 				pauseMenu(&txtPause1, &txtPause2, &font, *window);
 
-				windowDraw(*window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong, &txtTime, &txtPause1, &txtPause2);
+				windowDraw(*window, fundoImage, numEscada, numPlataforma, numBarrels, &ladders, &platforms, player, &barrels, kong, &txtTime, &txtPause1, &txtPause2, alex);
 			}
 			else if(!isPaused && isWon){
 				backgroundMusic.stop();
@@ -128,6 +129,7 @@ Game::~Game(){
 	delete window;
 	delete player;
     delete kong;
+    delete alex;
 	delete textureBarrel;
 	delete gameClock;
 	delete gameTime;

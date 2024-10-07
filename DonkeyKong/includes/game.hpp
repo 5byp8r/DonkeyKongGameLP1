@@ -50,6 +50,7 @@ private:
 		vector<Barrel> barrels;
 		Player* player;
 		Kong* kong;
+		Alex* alex;
 		bool isDead;
 		bool isPaused;
 		bool timePause;

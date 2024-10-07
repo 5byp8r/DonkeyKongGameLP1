@@ -48,7 +48,7 @@ string setIcon(sf::RenderWindow &window){
 	return "truth";
 }
 
-bool testCreation(sf::RenderWindow &window, sf::Texture *textureFundo, sf::Sprite *fundoImage, sf::Texture *textureBarrel, sf::Font *font, Musics *backgroundMusic, vector<Platforms> *platforms, vector<Ladder> *ladders, vector<Barrel> *barrels, Player *player, Kong *kong){
+bool testCreation(sf::RenderWindow &window, sf::Texture *textureFundo, sf::Sprite *fundoImage, sf::Texture *textureBarrel, sf::Font *font, Musics *backgroundMusic, vector<Platforms> *platforms, vector<Ladder> *ladders, vector<Barrel> *barrels, Player *player, Kong *kong, Alex *alex){
 	if(!textureFundo->loadFromFile("assets/backgroundNight.png")){
 		return false;
 	}
@@ -99,6 +99,12 @@ bool testCreation(sf::RenderWindow &window, sf::Texture *textureFundo, sf::Sprit
 
 	if(!kong->isKongCreated){
 		cout << "Kong não criado" << endl;
+
+		return false;
+	}
+
+	if(!alex->isAlexCreated){
+		cout << "Alex não criada" << endl;
 
 		return false;
 	}
@@ -361,7 +367,7 @@ void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *
 	txtWin3->setPosition(sf::Vector2f(window.getSize().x/2 - txtWin3->getGlobalBounds().width/2, window.getSize().y/2 + txtWin3->getGlobalBounds().height/2 + 45));
 }
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime){
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, Alex *alex){
 	window.clear(sf::Color::Black);
 
 	window.draw(fundoImage);
@@ -383,11 +389,13 @@ void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEsca
 	player->draw(window);
 
 	kong->draw(window);
+
+	alex->draw(window);
 
 	window.display();
 }
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, sf::Text *txtPause1, sf::Text *txtPause2){
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, sf::Text *txtPause1, sf::Text *txtPause2, Alex *alex){
 	window.clear(sf::Color::Black);
 
 	window.draw(fundoImage);
@@ -409,6 +417,8 @@ void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEsca
 	player->draw(window);
 
 	kong->draw(window);
+
+	alex->draw(window);
 
 	window.draw(*txtPause1);
 	window.draw(*txtPause2);

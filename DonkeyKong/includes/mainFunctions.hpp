@@ -19,6 +19,7 @@
 #include "platforms.hpp"
 #include "ladder.hpp"
 #include "Kong.hpp"
+#include "alex.hpp"
 #include "player.hpp"
 #include "barrel.hpp"
 
@@ -26,7 +27,7 @@ using namespace std;
 
 vector<Platforms> createPlatforms();
 
-bool testCreation(sf::RenderWindow &window, sf::Texture *textureFundo, sf::Sprite *fundoImage, sf::Texture *textureBarrel, sf::Font *font, Musics *backgroundMusic, vector<Platforms> *platforms, vector<Ladder> *ladders, vector<Barrel> *barrels, Player *player, Kong *kong);
+bool testCreation(sf::RenderWindow &window, sf::Texture *textureFundo, sf::Sprite *fundoImage, sf::Texture *textureBarrel, sf::Font *font, Musics *backgroundMusic, vector<Platforms> *platforms, vector<Ladder> *ladders, vector<Barrel> *barrels, Player *player, Kong *kong, Alex *alex);
 
 string setIcon(sf::RenderWindow &window);
 
@@ -36,9 +37,9 @@ void checkPlayerStatus(Player *player, vector<Barrel> *barrels, size_t numBarrel
 
 void hudUpdater(sf::Text *txtTime, sf::Font *font, sf::Time *gameTime, sf::RenderWindow &window);
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime);
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, Alex *alex);
 
-void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, sf::Text *txtPause1, sf::Text *txtPause2);
+void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, size_t numEscada, size_t numPlataforma, size_t numBarrels, vector<Ladder> *ladders, vector<Platforms> *platforms, Player *player, vector<Barrel> *barrels, Kong *kong, sf::Text *txtTime, sf::Text *txtPause1, sf::Text *txtPause2, Alex *alex);
 
 void windowDraw(sf::RenderWindow &window, sf::Sprite &fundoImage, sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3);
 
