@@ -290,8 +290,7 @@ void Barrel::move(){
 																velX = 0;
 															}
 															else{
-																//barrelSprite.setPosition(200, 154);
-																//endTrack = true;
+																endTrack = true;
 															}
 														}
 													}
@@ -308,9 +307,7 @@ void Barrel::move(){
 		constVelX = 5;
 	}
 
-	if(!endTrack){
-		barrelSprite.setPosition(barrelSprite.getPosition().x + velX, barrelSprite.getPosition().y + velY);
-	}
+	barrelSprite.setPosition(barrelSprite.getPosition().x + velX, barrelSprite.getPosition().y + velY);
 
 	positionX = barrelSprite.getPosition().x;
 	positionY = barrelSprite.getPosition().y;
