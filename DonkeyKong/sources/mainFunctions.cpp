@@ -340,7 +340,7 @@ void winMenu(sf::Text *txtWin1, sf::Text *txtWin2, sf::Text *txtWin3, sf::Font *
 			txtWin2->setString(ss.str());
 		}
 		else{
-			float seconds = devTime->asSeconds();
+			float seconds = recordTime->asSeconds();
 			seconds = floorf(seconds * 100) / 100;
 			int minutes = seconds / 60;
 			seconds = seconds - minutes * 60;
