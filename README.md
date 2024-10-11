@@ -1,3 +1,4 @@
+[English Here](/README_en.md)
 ![MINEKONG-06-10-2024](https://github.com/user-attachments/assets/e6d7d8bf-f35d-4aa7-b40e-b2537d5a5eac)
 
 # Sobre o jogo
