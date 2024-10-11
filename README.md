@@ -14,5 +14,4 @@ Pausar - Esc </br>
 
 ![image](https://github.com/user-attachments/assets/7c9c8b2a-119d-4a4d-8983-7ee2309eb966)
 
-
 - Programado em C++ com o uso da biblioteca [SFML](https://www.sfml-dev.org/)
