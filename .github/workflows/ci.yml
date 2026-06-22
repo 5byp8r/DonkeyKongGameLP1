@@ -35,10 +35,10 @@ jobs:
       run: cmake -B build ${{matrix.platform.flags}} ${{matrix.config.flags}}
 
     - name: Build
-      run: cmake --build build --config Release
+      run: cmake --build build
 
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.1
       with:
         name: MineKong-${{ matrix.platform.name }}-${{ matrix.config.name }}-Build
         path: build/bin/            # The exact folder or file path to save
