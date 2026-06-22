@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include <SFML/audio.hpp>
+#include <SFML/Audio.hpp>
 
 #include "sounds.hpp"
 #include "musics.hpp"

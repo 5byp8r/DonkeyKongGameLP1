@@ -9,7 +9,7 @@
 #define SRC_AUDIO_HPP_
 
 #include <iostream>
-#include <SFML/audio.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace std;
 

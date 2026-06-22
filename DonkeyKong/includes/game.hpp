@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/audio.hpp>
+#include <SFML/Audio.hpp>
 #include "mainFunctions.hpp"
 using namespace std;
 
