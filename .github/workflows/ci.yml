@@ -35,10 +35,27 @@ jobs:
       run: cmake -B build ${{matrix.platform.flags}} ${{matrix.config.flags}}
 
     - name: Build
-      run: cmake --build build
+      run: cmake --build build --config Release
 
-    - name: Upload
+    - name: Prepare Artifact
+      shell: bash
+      run: |
+        mkdir -p dist/assets
+        
+        # 1. Copy Assets (always from the source tree repository)
+        cp -r DonkeyKong/assets/* dist/assets/
+        
+        # 2. Find and copy the executable based on where the OS placed it
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          cp build/bin/Release/MineKong.exe dist/
+          # If your build generated SFML shared DLLs, copy them too:
+          cp build/bin/Release/*.dll dist/ 2>/dev/null || true
+        else
+          cp build/bin/MineKong dist/
+        fi
+
+    - name: Upload Artifact
       uses: actions/upload-artifact@v7.0.1
       with:
         name: MineKong-${{ matrix.platform.name }}-${{ matrix.config.name }}-Build
-        path: build/bin/            # The exact folder or file path to save
+        path: dist/
